@@ -10,11 +10,14 @@ def home(request):
     question_list = Question.objects.order_by('-create_at') 
     # 입력 파라미터
     page = request.GET.get('page','1')
+     
     # 페이징처리
     paginator = Paginator(question_list, 7)
     page_obj = paginator.get_page(page)
     return render(request, 'home.html',{'question_list':page_obj})
-    #return render(request, 'home.html',{'question_list':question_list})
+
+     
+     
 
 def question_create(request):
     if request.method == 'POST':
@@ -42,7 +45,7 @@ def question_modify(request, question_id):
         messages.error(request, '수정권한이 없습니다')
         return redirect('question_detail', question_id=question_id)
 
-    if request.method == 'POST':
+    if request.method == 'POST':#form 채워 온 것을 받고  save 하고 나머지 author ,timezone 정해줌
         form = NewQuestionForm(request.POST, instance=question)
         if form.is_valid():
             question = form.save(commit=False)
@@ -51,7 +54,7 @@ def question_modify(request, question_id):
             question.save()
             return redirect('question_detail', question_id=question_id)
     else:
-        form = NewQuestionForm(instance=question)
+        form = NewQuestionForm(instance=question)#question_create,html form에 question instance 넣어 보여줘라
         return render(request, 'question_create.html', {'form': form})
 
 
